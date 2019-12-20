@@ -54,16 +54,16 @@ function lookforMovie(req, res) {
         }
     });
     sql += moreInfoMovie.orden.sql;
-    sql += moreInfoMovie.limit.sql; console.log(' sqlllllll ' + sql);
+    sql += moreInfoMovie.limit.sql;
     conexion.query(sql, function (err, answer) {
         if (err) {
             return res.status(404).send("Error en consulta película.");
         }
 
         res.send(JSON.stringify({
-            peliculas: answer
+            peliculas: answer,
+            total: 20
         }));
-        return true;
     });
 }
 
@@ -92,15 +92,12 @@ function infoMovie(req, res) {
     if (req.params.id === 'recomendacion') return;
     const id = req.params.id;
     let sql = 'SELECT * FROM pelicula INNER JOIN genero ON pelicula.genero_id = genero.id WHERE pelicula.id = ' + id;
-    console.log("sql info " + sql);
     conexion.query(sql, (err, answer) => {
         if (err) {
             return res.status(404).send('Error en consulta del id de película.');
         }
 
         sql = 'SELECT * FROM actor_pelicula INNER JOIN actor ON actor_pelicula.actor_id = actor.id WHERE actor_pelicula.id = ' + id;
-        console.log("sql info " + sql);
-
         conexion.query(sql, (err_, answer_) => {
             if (err_) return res.status(404).send('Error en consulta del actor de pelicula.');
 
