@@ -60,10 +60,17 @@ function lookforMovie(req, res) {
             return res.status(404).send("Error en consulta película.");
         }
 
-        res.send(JSON.stringify({
-            peliculas: answer,
-            total: 20
-        }));
+        query = ' SELECT COUNT(*) AS cantidad FROM pelicula ';
+        conexion.query(query, function (err_, countCant, answer_) {
+            if (err_) {
+                return res.status(404).send("Error consulta de cantidad.");
+            }
+
+            res.send(JSON.stringify({
+                peliculas: answer,
+                total: countCant[0].cantidad
+            }));
+        });
     });
 }
 
